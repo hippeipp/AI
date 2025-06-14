@@ -10,3 +10,6 @@ roboflow
 fastapi
 uvicorn
 rapidfuzz
+numpy
+tensorflow
+scikit-learn

@@ -1,48 +1,48 @@
-
 # Cấu hình chung cho dự án
 
 # Cấu hình Roboflow
 roboflow:
-  api_key: "3r1Sx3tQMCT5Z97kxRT4"  # Thay bằng khóa API từ Roboflow
-  workspace: "cheese-qkayz"       # Tên workspace trên Roboflow
-  project: "project_ai-fn21l"        # Tên project trên Roboflow
-  version: 5                       # Phiên bản dataset
+  api_key: "3r1Sx3tQMCT5Z97kxRT4"        # Thay bằng khóa API từ Roboflow
+  workspace: "cheese-qkayz"              # Tên workspace trên Roboflow
+  project: "project_ai-fn21l"            # Tên project trên Roboflow
+  version: 5                             # Phiên bản dataset
 
 # Đường dẫn dữ liệu và mô hình
 paths:
-  train_path: "train"               # Đường dẫn đến thư mục huấn luyện
-  test_path: "test"                 # Đường dẫn đến thư mục kiểm tra
-  dev_path: "dev"                   # Đường dẫn đến thư mục phát triển
+  train_path: "train"                    # Đường dẫn đến thư mục huấn luyện
+  test_path: "test"                      # Đường dẫn đến thư mục kiểm tra
+  dev_path: "dev"                        # Đường dẫn đến thư mục phát triển
   model_path: "models/best_plate_detector.pt"  # Đường dẫn lưu mô hình huấn luyện
-  output_path: "outputs"            # Đường dẫn lưu kết quả
+  output_path: "outputs"                 # Đường dẫn lưu kết quả
 
 # Cấu hình mô hình YOLOv8
 model:
-  size: "n"                         # Kích thước mô hình (n=nano, s=small, m=medium, l=large, x=extra large)
-  confidence_threshold: 0.65    # Ngưỡng độ tin cậy cho phát hiện
-  iou_threshold: 0.45              # Ngưỡng IoU cho Non-Max Suppression
-  image_size: 416               # Kích thước ảnh đầu vào
-  batch_size: 8                  # Kích thước batch khi huấn luyện
-  epochs: 50                      # Số epoch huấn luyện
+  size: "n"                              # Kích thước mô hình (n=nano, s=small, m=medium, l=large, x=extra large)
+  confidence_threshold: 0.65             # Ngưỡng độ tin cậy cho phát hiện
+  iou_threshold: 0.45                    # Ngưỡng IoU cho Non-Max Suppression
+  image_size: 416                        # Kích thước ảnh đầu vào
+  batch_size: 8                          # Kích thước batch khi huấn luyện
+  epochs: 50                             # Số epoch huấn luyện
 
 # Cấu hình huấn luyện
 training:
-  patience: 10                     # Số epoch chờ trước khi dừng sớm
-  save_period: 10                  # Lưu mô hình sau mỗi bao nhiêu epoch
-  augmentation: true               # Bật tăng cường dữ liệu
+  patience: 10                           # Số epoch chờ trước khi dừng sớm
+  save_period: 10                        # Lưu mô hình sau mỗi bao nhiêu epoch
+  augmentation: true                     # Bật tăng cường dữ liệu
   epochs: 50
   batch_size: 8
+
 # Cấu hình OCR
 ocr:
-  languages: ["en", "vi"]          # Ngôn ngữ hỗ trợ
-  confidence_threshold: 0.5        # Ngưỡng độ tin cậy cho OCR
+  languages: ["en", "vi"]                # Ngôn ngữ hỗ trợ
+  confidence_threshold: 0.5              # Ngưỡng độ tin cậy cho OCR
 
 # Cấu hình API (nếu sử dụng FastAPI)
 api:
-  host: "0.0.0.0"                  # Địa chỉ host của API
-  port: 8000                       # Cổng API
-  max_file_size: 10485760          # Giới hạn kích thước file (10MB)
+  host: "0.0.0.0"                        # Địa chỉ host của API
+  port: 8000                             # Cổng API
+  max_file_size: 10485760                # Giới hạn kích thước file (10MB)
 
 # Cấu hình Streamlit
 streamlit:
-  port: 8501                       # Cổng Streamlit
+  port: 8501                             # Cổng Streamlit

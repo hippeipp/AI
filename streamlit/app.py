@@ -12,10 +12,13 @@ import yaml
 
 def format_plate(text):
     import re
+    if not text or text.lower() == "none":
+        return "Không nhận diện"
     text = re.sub(r'[^A-Z0-9]', '', text.upper())
-    # Định dạng lại biển số nếu đủ 8 ký tự
     if len(text) == 8:
         return f"{text[:4]}-{text[4:]}"
+    if len(text) == 9:
+        return f"{text[:5]}-{text[5:]}"
     return text
 
 # Đọc cấu hình
@@ -45,12 +48,8 @@ if uploaded_file is not None:
     # Chuyển ảnh sang numpy array để xử lý
     image_np = np.array(image)
 
-    # Tiền xử lý ảnh
-    preprocessor = ImagePreprocessor()
-    processed_image = preprocessor.preprocess_for_model(image_np)
-
     # Phát hiện biển số
-    detections = plate_detector.detect_plates(processed_image)
+    detections = plate_detector.detect_plates(image_np)
 
     # Hiển thị kết quả
     if detections:
@@ -59,10 +58,8 @@ if uploaded_file is not None:
             confidence = detection['confidence']
             plate_text = format_plate(detection['text'])
             st.write(f"Biển số phát hiện: {plate_text} (Độ tin cậy: {confidence:.2f})")
-            # Vẽ khung quanh biển số trên ảnh
             cv2.rectangle(image_np, (bbox[0], bbox[1]), (bbox[2], bbox[3]), (255, 0, 0), 2)
     else:
         st.write("Không phát hiện được biển số nào.")
-
     # Hiển thị ảnh đã đánh dấu
     st.image(image_np, caption='Ảnh đã nhận diện', use_container_width=True)

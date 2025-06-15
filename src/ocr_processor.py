@@ -13,18 +13,17 @@ class VietnameseOCR:
         ]
 
     def preprocess_plate_image(self, plate_img: np.ndarray) -> np.ndarray:
+        # Chuyển sang grayscale nếu cần
         if len(plate_img.shape) == 3 and plate_img.shape[2] == 3:
             gray = cv2.cvtColor(plate_img, cv2.COLOR_BGR2GRAY)
         else:
             gray = plate_img
 
-        edges = cv2.Canny(gray, 100, 200)
-        combined = cv2.bitwise_or(gray, edges)
-        return combined
-    
+        # Tăng cường tương phản bằng CLAHE
         clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
         enhanced = clahe.apply(gray)
 
+        # Resize lớn hơn để OCR tốt hơn
         resized = cv2.resize(enhanced, None, fx=2.0, fy=2.0, interpolation=cv2.INTER_LINEAR)
         blur = cv2.GaussianBlur(resized, (3, 3), 0)
         _, binary = cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
@@ -34,31 +33,15 @@ class VietnameseOCR:
     def extract_text(self, plate_img: np.ndarray) -> Optional[str]:
         try:
             processed = self.preprocess_plate_image(plate_img)
-           
-
-            # Hiển thị để debug nếu cần:
-            # cv2.imshow("Processed OCR", processed)
-            # cv2.waitKey(0)
             results = self.reader.readtext(processed, allowlist='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-', detail=0)
 
             if not results or len(results) == 0:
                 return None
 
-            # Bỏ qua các kết quả lỗi (ví dụ không đủ chiều dữ liệu)
-            valid_results = []
-            for r in results:
-                if isinstance(r, tuple) and len(r) >= 3:
-                    valid_results.append(r)
-
-                    if not valid_results:
-                        return None
-
-            # Sắp xếp theo chiều y để giữ dòng đầu trước
-            sorted_lines = sorted(valid_results, key=lambda x: x[0][0][1])
-            texts = [line[1] for line in sorted_lines if line[2] > 0.3]
-
-            full_text = ' '.join(texts)
+            # Ghép các kết quả lại thành một chuỗi
+            full_text = ''.join(results)
             cleaned = self.clean_text(full_text)
+            return cleaned
 
         except Exception as e:
             print(f"❌ Lỗi OCR: {e}")
